@@ -43,7 +43,7 @@ public class InmuebleServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        inmuebleService = new InmuebleServiceImpl(inmuebleRepository, inmuebleFotoRepository, usuarioService, caracteristicaService);
+        inmuebleService = new InmuebleServiceImpl();
     }
 
 
