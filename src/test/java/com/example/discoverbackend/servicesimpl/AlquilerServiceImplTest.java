@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +39,6 @@ public class AlquilerServiceImplTest {
     @Mock
     private InmuebleRepository inmuebleRepository;
 
-
     @Test
     public void testCreateAlquilerInmuebleAlreadyRented() {
         Usuario client = new Usuario();
@@ -49,9 +49,9 @@ public class AlquilerServiceImplTest {
 
         Alquiler existingAlquiler = new Alquiler(client, inmueble, 500.0, new Date(), true);
 
-        when(alquilerRepository.findByClient_Id(any())).thenReturn(Arrays.asList(existingAlquiler));
-        when(inmuebleRepository.findById(any())).thenReturn(Optional.of(inmueble));
-        when(usuarioRepository.findById(any())).thenReturn(Optional.of(client));
+        lenient().when(alquilerRepository.findByClient_Id(any())).thenReturn(Arrays.asList(existingAlquiler));
+        lenient().when(inmuebleRepository.findById(any())).thenReturn(Optional.of(inmueble));
+        lenient().when(usuarioRepository.findById(any())).thenReturn(Optional.of(client));
 
         AlquilerRequest request = new AlquilerRequest();
         request.setClient_id(1L);
@@ -59,7 +59,11 @@ public class AlquilerServiceImplTest {
         request.setPrice(500.0);
         request.setTransactionDate(new Date());
 
-        alquilerService.createAlquiler(request);
+        Exception exception = Assert.assertThrows(RuntimeException.class, () -> {
+            alquilerService.createAlquiler(request);
+        });
+
+        Assert.assertEquals("Inmueble ya alquilado", exception.getMessage());
     }
 
 

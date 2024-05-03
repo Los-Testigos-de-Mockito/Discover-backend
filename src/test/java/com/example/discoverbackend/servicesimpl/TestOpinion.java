@@ -26,24 +26,6 @@ public class TestOpinion {
 
     @InjectMocks
     private OpinionServiceImpl opinionService;
-/*
-    @Test
-    public void testCreateOpinion() {
-        OpinionRequest request = new OpinionRequest(1L, 1L, "Nice place!", 5.0);
-        Usuario usuario = new Usuario();
-        Inmueble inmueble = new Inmueble();
-
-        when(usuarioRepository.findById(any())).thenReturn(Optional.of(usuario));
-        when(inmuebleRepository.findById(any())).thenReturn(Optional.of(inmueble));
-        when(opinionRepository.save(any(Opinion.class))).thenAnswer(i -> i.getArguments()[0]);
-
-        Opinion savedOpinion = opinionService.createOpinion(request);
-
-        Assert.assertNotNull(savedOpinion);
-        Assert.assertEquals(Double.valueOf(5.0), savedOpinion.getCalificacion());
-        Assert.assertEquals("Nice place!", savedOpinion.getObservaciones());
-    }
-*/
     @Test
     public void testOpinionCreation() {
         Usuario usuario = new Usuario();
