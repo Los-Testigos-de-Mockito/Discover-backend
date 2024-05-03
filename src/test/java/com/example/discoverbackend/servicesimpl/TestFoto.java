@@ -3,7 +3,9 @@ package com.example.discoverbackend.servicesimpl;
 import com.example.discoverbackend.entities.Foto;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class TestFoto {
     @Test
     public void testFotoCreation() {
