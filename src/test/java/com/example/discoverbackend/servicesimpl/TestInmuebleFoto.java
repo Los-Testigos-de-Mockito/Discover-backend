@@ -5,7 +5,9 @@ import com.example.discoverbackend.entities.Inmueble;
 import com.example.discoverbackend.entities.InmuebleFoto;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class TestInmuebleFoto {
     @Test
     public void testInmuebleFotoCreation() {

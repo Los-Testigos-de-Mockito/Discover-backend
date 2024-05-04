@@ -18,21 +18,6 @@ public class TestRoleUser {
 
     @InjectMocks
     private RoleService roleService;
-/*
-    @Test
-    public void testSeedRole() {
-        when(roleRepository.existsByName(anyString())).thenReturn(false);
-        doAnswer(invocation -> {
-            RoleApplication role = new RoleApplication(invocation.getArgument(0));
-            role.setId(1L); // Simular la asignación de ID
-            return role;
-        }).when(roleRepository).save(any(RoleApplication.class));
-
-        roleService.seedRol();
-
-        verify(roleRepository, times(2)).save(any(RoleApplication.class));
-    }
-*/
     @Test
     public void testRoleUserCreation() {
         Usuario user = new Usuario();
