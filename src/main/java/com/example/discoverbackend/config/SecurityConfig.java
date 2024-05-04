@@ -70,7 +70,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://discover-mock.netlify.app/**","http://localhost:4200", "https://angular-springboot-*.vercel.app", "https://discoveraplication.netlify.app"));
+        configuration.setAllowedOrigins(List.of("https://discover-mock.netlify.app", "http://localhost:4200", "https://angular-springboot-*.vercel.app", "https://discoveraplication.netlify.app"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
+        configuration.setAllowedHeaders(List.of("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    /*
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("https://discover-mock.netlify.app","http://localhost:4200", "https://angular-springboot-*.vercel.app", "https://discoveraplication.netlify.app"));
         configuration.setAllowedOriginPatterns(List.of("https://discover-mock.netlify.app/**","http://localhost:4200", "https://angular-springboot1-beta.vercel.app", "https://discoveraplication.netlify.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
         configuration.setAllowedHeaders(List.of("Access-Control-Allow-Origin", "X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));
@@ -78,6 +91,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
+    }*/
 
 }
