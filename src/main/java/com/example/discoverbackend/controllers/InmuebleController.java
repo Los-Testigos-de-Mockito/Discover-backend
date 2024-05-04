@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "https://localhost:4200")
+@CrossOrigin(origins = "https://discover-mock.netlify.app")
 @RestController
 @RequestMapping("/api")
 public class InmuebleController {
