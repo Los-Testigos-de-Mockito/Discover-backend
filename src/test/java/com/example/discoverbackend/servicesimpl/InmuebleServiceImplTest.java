@@ -3,8 +3,11 @@ package com.example.discoverbackend.servicesimpl;
 import com.example.discoverbackend.dtos.DTOContactoUsuario;
 import com.example.discoverbackend.dtos.ShowInmuebleResponse;
 import com.example.discoverbackend.entities.*;
+import com.example.discoverbackend.repositories.AlquilerRepository;
 import com.example.discoverbackend.repositories.InmuebleFotoRepository;
 import com.example.discoverbackend.repositories.InmuebleRepository;
+import com.example.discoverbackend.repositories.UsuarioRepository;
+import com.example.discoverbackend.services.AlquilerService;
 import com.example.discoverbackend.services.CaracteristicaService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,26 +28,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class InmuebleServiceImplTest {
-
-    @Mock
-    private InmuebleRepository inmuebleRepository;
-
-    @Mock
-    private InmuebleFotoRepository inmuebleFotoRepository;
-
-    @Mock
-    private UsuarioServiceImpl usuarioService;
-
-    @InjectMocks
-    private InmuebleServiceImpl inmuebleService;
-
-    @Mock
-    private CaracteristicaService caracteristicaService;
 
     @BeforeEach
     public void setUp() {
-        inmuebleService = new InmuebleServiceImpl(inmuebleRepository, inmuebleFotoRepository, usuarioService, caracteristicaService);
+
     }
 
 
@@ -59,20 +49,9 @@ public class InmuebleServiceImplTest {
         assertEquals(Double.valueOf(1200.0), inmueble.getPrice());
         assertEquals("House", inmueble.getPropertyType());
     }
-/*
-    @Test
-    public void testListAllInmuebles() {
-        Inmueble inmueble = new Inmueble();
-        inmueble.setId(1L);
-        when(inmuebleRepository.findAll()).thenReturn(Arrays.asList(inmueble));
 
-        List<PrincipalInmueblesResponse> responses = inmuebleService.listAll();
-        Assert.assertFalse(responses.isEmpty());
-        assertEquals(1, responses.size());
-        assertEquals(Long.valueOf(1L), responses.get(0).getId());
-    }
-
-*/
+    /*
+    //aqui
     @Test
     public void testListDataInmueble() {
         // inicialización
@@ -125,7 +104,7 @@ public class InmuebleServiceImplTest {
         assertEquals(testInmueble.getAddress(), result.getAddress(), "La dirección del inmueble no coincide");
 
     }
-
+*/
     @Test
     public void testGetInmuebleOpinions(){
         Inmueble var1 = new Inmueble();
