@@ -8,16 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.example.discoverbackend.services.InmuebleService;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InmuebleServiceImpl implements InmuebleService {
 
     @Autowired
     InmuebleRepository inmuebleRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
     @Autowired
     UsuarioRepository usuarioRepository;
     @Autowired
@@ -85,6 +94,64 @@ public class InmuebleServiceImpl implements InmuebleService {
         }
         return dtoOpinions;
     }
+
+    public List<PrincipalInmueblesResponse> searchInmuebles(String propertyType, Integer numBedrooms, Double maxPrice) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Inmueble> query = criteriaBuilder.createQuery(Inmueble.class);
+        Root<Inmueble> root = query.from(Inmueble.class);
+        query.select(root);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (propertyType != null && !propertyType.trim().isEmpty()) {
+            predicates.add(criteriaBuilder.equal(root.get("propertyType"), propertyType));
+        }
+        if (numBedrooms != null) {
+            predicates.add(criteriaBuilder.equal(root.get("numBedrooms"), numBedrooms));
+        }
+        if (maxPrice != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+        }
+
+        if (!predicates.isEmpty()) {
+            query.where(predicates.toArray(new Predicate[0]));
+        }
+
+        List<Inmueble> properties = entityManager.createQuery(query).getResultList();
+
+        List<PrincipalInmueblesResponse> propertiesResponse = new ArrayList<>();
+        for (Inmueble inmueble : properties) {
+            List<String> photoUrls = inmueble.getInmuebleFotoList().stream()
+                    .map(foto -> foto.getFoto().getPhotoLink())
+                    .collect(Collectors.toList());
+
+            List<TipoCaracteristica> caracteristicaList = inmueble.getCaracteristicaList().stream()
+                    .map(ic -> new TipoCaracteristica(ic.getCaracteristica().getTipoCaracteristica().getName(), ic.getCaracteristica().getName()))
+                    .collect(Collectors.toList());
+
+            propertiesResponse.add(new PrincipalInmueblesResponse(
+                    inmueble.getId(),
+                    inmueble.getUsuario().getLinkPhotoProfile(),
+                    inmueble.getUsuario().getFirstName(),
+                    inmueble.getUbigeo().getProvincia(),
+                    inmueble.getUbigeo().getDepartamento(),
+                    inmueble.getUbigeo().getDistrito(),
+                    photoUrls.isEmpty() ? null : photoUrls.get(0),
+                    inmueble.getPrice(),
+                    inmueble.getSquareMeter(),
+                    inmueble.getNumGuests(),
+                    inmueble.getNumBedrooms(),
+                    inmueble.getNumBathrooms(),
+                    inmueble.getDescription(),
+                    inmueble.getPropertyType(),
+                    inmueble.getSharedRoom(),
+                    caracteristicaList
+            ));
+        }
+
+        return propertiesResponse;
+    }
+
+
     public ShowInmuebleResponse listDataInmueble(Long id){
         Inmueble i = inmuebleRepository.findById(id).get();
         List<InmuebleFoto> inmuebleFotos = inmuebleFotoRepository.findByInmueble_Id(id);
@@ -108,17 +175,17 @@ public class InmuebleServiceImpl implements InmuebleService {
         Inmueble saveInmueble = inmuebleRepository.save(new Inmueble(inmueble.getPropertyType(), inmueble.getSharedRoom(), inmueble.getAddress(), inmueble.getPrice(), inmueble.getNumBedrooms(), inmueble.getNumBathrooms(), inmueble.getNumGuests(), inmueble.getSquareMeter(), inmueble.getTimeAntiquity(), inmueble.getDescription(),usuario, ubigeo));
         List<Foto> foto = new ArrayList<Foto>();
         for (String f: inmueble.getFoto()){
-           Foto newFoto = fotoRepository.save(new Foto(f));
-           foto.add(newFoto);
+            Foto newFoto = fotoRepository.save(new Foto(f));
+            foto.add(newFoto);
         }
         List<InmuebleFoto> inmuebleFotos = new ArrayList<InmuebleFoto>();
         for(Foto foto1 : foto){
-           InmuebleFoto inmuebleFoto = inmuebleFotoRepository.save(new InmuebleFoto(saveInmueble,foto1));
-           inmuebleFotos.add(inmuebleFoto);
+            InmuebleFoto inmuebleFoto = inmuebleFotoRepository.save(new InmuebleFoto(saveInmueble,foto1));
+            inmuebleFotos.add(inmuebleFoto);
         }
         for(Long c: inmueble.getCaracteristicasIds()){
-           Caracteristica newCaracteristica = caracteristicaRepository.findById(c).get();
-           inmuebleCaracteristicaRepository.save(new InmuebleCaracteristica(saveInmueble, newCaracteristica));
+            Caracteristica newCaracteristica = caracteristicaRepository.findById(c).get();
+            inmuebleCaracteristicaRepository.save(new InmuebleCaracteristica(saveInmueble, newCaracteristica));
         }
         for (Long caracteristicaId : inmueble.getCaracteristicasIds()){
             saveInmueble.setInmuebleFotoList(null);

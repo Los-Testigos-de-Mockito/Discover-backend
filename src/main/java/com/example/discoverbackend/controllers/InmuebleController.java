@@ -33,6 +33,13 @@ public class InmuebleController {
     }
 
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
+    @GetMapping("/inmuebles-search")
+    public ResponseEntity<List<PrincipalInmueblesResponse>> searchInmuebles(@RequestParam(required = false) String propertyType, @RequestParam(required = false) Integer numBedrooms, @RequestParam(required = false) Double maxPrice) {
+        List<PrincipalInmueblesResponse> inmuebles = inmuebleService.searchInmuebles(propertyType, numBedrooms, maxPrice);
+        return new ResponseEntity<List<PrincipalInmueblesResponse>>(inmuebles, HttpStatus.OK);
+    }
+
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @GetMapping("/inmuebles/{id}")
     public ResponseEntity<ShowInmuebleResponse> getInmueblesById(@PathVariable("id") Long id) {
         ShowInmuebleResponse inmueble = inmuebleService.listDataInmueble(id);

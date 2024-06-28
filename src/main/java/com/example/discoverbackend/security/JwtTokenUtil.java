@@ -14,7 +14,7 @@ import java.util.Date;
 public class JwtTokenUtil {
     private static final Logger log = LoggerFactory.getLogger(JwtTokenUtil.class);
 
-    @Value("openb")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Value("86400000")

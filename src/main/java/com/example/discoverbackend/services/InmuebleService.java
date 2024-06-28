@@ -10,6 +10,7 @@ import java.util.List;
 public interface InmuebleService {
 
     public List<PrincipalInmueblesResponse> listAll();
+    public List<PrincipalInmueblesResponse> searchInmuebles(String propertyType, Integer numBedrooms, Double maxPrice);
 
     public ShowInmuebleResponse listDataInmueble(Long id);
 
